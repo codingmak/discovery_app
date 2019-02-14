@@ -184,3 +184,14 @@ Traceback (most recent call last):
   File "/home/django/.local/share/virtualenvs/flask-backend-4nHDySRL/lib/python3.6/site-packages/flask/templating.py", line 64, in get_source
     raise TemplateNotFound(template)
 jinja2.exceptions.TemplateNotFound: example_template.html
+2019-02-14 13:22:14,614 - __main__ - DEBUG - Add the following customer filters to Jinja environment: leetify
+2019-02-14 13:23:35,438 - __main__ - DEBUG - Add the following customer filters to Jinja environment: leetify
+2019-02-14 13:58:57,165 - __main__ - DEBUG - Add the following customer filters to Jinja environment: leetify
+2019-02-14 16:34:04,587 - __main__ - DEBUG - Add the following customer filters to Jinja environment: leetify
+2019-02-14 16:35:02,308 - __main__ - DEBUG - Add the following customer filters to Jinja environment: leetify
+2019-02-14 17:08:46,886 - __main__ - DEBUG - Add the following customer filters to Jinja environment: leetify
+2019-02-14 17:10:03,593 - __main__ - DEBUG - Add the following customer filters to Jinja environment: leetify
+2019-02-14 17:10:06,048 - __main__ - DEBUG - Add the following customer filters to Jinja environment: leetify
+2019-02-14 17:14:05,546 - __main__ - DEBUG - Add the following customer filters to Jinja environment: leetify
+2019-02-14 17:14:07,411 - __main__ - DEBUG - Add the following customer filters to Jinja environment: leetify
+2019-02-14 17:27:01,965 - __main__ - DEBUG - Add the following customer filters to Jinja environment: leetify

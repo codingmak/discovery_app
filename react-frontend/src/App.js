@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+
+import axios from 'axios';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
 
@@ -8,35 +9,115 @@ export default class App extends Component {
     constructor(props, context) {
         super(props, context);
 
-        this.state = { description: '' };
+        this.state = { 
+        data: '',
+        isLoading: false,
+        value1: 'Hello {{name}}! {% if test -%} How are you?{%- endif %}', 
+        value2: '{"name": "John"}' };
+
+        
+
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.click = this.click.bind(this);
+
+        
+
+    }
+//post
+ click() {
+        //what to send over to flask:
+   /*     template: $('#template').val(),
+            console.log($('#template').val())
+            values: $('#values').val(),
+            input_type: input_type,
+            
+            //boolean
+            showwhitespaces: is_checked_showwhitespaces,
+            dummyvalues: is_checked_dummyvalues*/
+
+        const request_info = {
+            template: this.state.value1,
+            values: this.state.value2
+        }
+
+        this.setState({ isLoading: true });
+
+        axios.post("http://localhost:5000/convert", {request_info},console.log(request_info))
+            .then((response) => {
+                  this.setState({ data: response.data, isLoading: false });
+             })
+            .catch((err) => {
+                  this.setState({ data: err, isLoading: false });
+             });
     }
 
-    onChange(e) {
-        this.setState({
-            [e.target.name]: e.target.value
-        });
+
+  handleChange(event) {
+    this.setState({value: event.target.value1});
+  }
+
+    handleValueChange(event) {
+    this.setState({value: event.target.value2});
+  }
+  handleSubmit(event) {
+    alert('An essay was submitted: ' + this.state.value1);
+    event.preventDefault();
+  }
+
+   
+
+    
+
+//////////////GET/////////////////
+    state = {
+        loading: true,
+        person: null,
     }
+    async componentDidMount(){
 
-    onSubmit(e) {
-        e.preventDefault();
+   /*     axios.post("http://localhost:5000/convert", this.state.value1).then(response => {
+          console.log(response);
+        }).catch(error => {
+          console.log("this is error", error);
+    });*/
 
-        fetch(this.props.formAction, {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({description: this.state.description})
-        });
+        const url = "https://api.randomuser.me/";
+        const response = await fetch(url);
+        const data = await response.json();
+        //change this so that if there is no response in render make it blank 
+        this.setState({person: data.results[0],loading:false})
+        console.log("response: "+ response.status)
+        console.log(data)
 
-        this.setState({description: ''});
+
+            ////POST////////////////
+
+        
     }
+    
+
+
+  
   render() {
+
+
     return (
       <div className="App">
       
           <p>
-          Test = {window.token}
+          {window.token}
+
+
+          <div>
+          {this.state.loading || !this.state.person ? <div id="render">loading...</div> : <div><div>{this.state.person.name.first}</div><div>{this.state.person.name.last}</div></div>}
+          </div>
+
+
           </p>
+
+
           <a
             className="App-link"
             href="https://reactjs.org"
@@ -49,7 +130,7 @@ export default class App extends Component {
         <div class="row">
             <div class="col-md-5">
                 <h1>Template</h1>
-               <textarea id="template"></textarea>
+               <textarea id="template" value={this.state.value1} onChange={this.handleChange}/>
             </div>
             <div class="col-md-5">
                 <h1>Render</h1>
@@ -63,7 +144,8 @@ export default class App extends Component {
                      <label><input type="checkbox" name="dummyvalues" /> Use dummy values</label>
                     <h1> JSON</h1>
                   
-                    <input type="button" class="btn btn-success" id="convert" value="Convert" />
+                    <input type="button" class="btn btn-success" id="convert" value="Convert" onClick={this.click} disabled={this.state.isLoading}/>
+                    {console.log(this.state.data)}
                     <input type="button" class="btn btn-danger" id="clear" value="Clear" />
                 </div>
             </div>
@@ -71,7 +153,7 @@ export default class App extends Component {
          <div class="row">
             <div class="col-md-5">
                 <h1>Values</h1>
-                <textarea id="values"></textarea>
+                <textarea id="values" value={this.state.value2} onChange={this.handleValueChange}></textarea>
             </div>
             <div class="col-md-7">
                 <h1>Custom Filters</h1>
@@ -85,4 +167,7 @@ export default class App extends Component {
     );
   }
 }
+
+// App.propTypes = { action: React.PropTypes.string.isRequired, method: React.PropTypes.string}
+
 

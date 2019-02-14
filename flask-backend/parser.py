@@ -11,10 +11,12 @@ import logging.handlers
 import json
 import yaml
 import config
-
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
+# cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 def get_custom_filters():
     import filters
@@ -29,7 +31,7 @@ def get_custom_filters():
 
 @app.route("/")
 def home():
-    return render_template('index.html', token="Hello" ,custom_filters=get_custom_filters())
+    return render_template('index.html', token="Flask is running" ,custom_filters=get_custom_filters())
 
 
 @app.route('/convert', methods=['GET', 'POST'])
@@ -66,13 +68,7 @@ def convert():
             except ValueError as e:
                 return "Value error in JSON: {0}".format(e)
         # Check YAML for errors
-        elif request.form['input_type'] == "yaml":
-            try:
-                values = yaml.load(request.form['values'])
-            except (ValueError, yaml.parser.ParserError, TypeError) as e:
-                return "Value error in YAML: {0}".format(e)
-        else:
-            return "Undefined input_type: {0}".format(request.form['input_type'])
+      
 
     # If ve have empty var array or other errors we need to catch it and show
     try:

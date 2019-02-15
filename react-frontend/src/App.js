@@ -13,7 +13,7 @@ export default class App extends Component {
         data: '',
         isLoading: false,
         value1: 'Hello {{name}}! {% if test -%} How are you?{%- endif %}', 
-        value2: '{"name": "John"}' };
+        value2: '{"name": "A"}' };
 
         
 
@@ -25,6 +25,8 @@ export default class App extends Component {
         
 
     }
+
+      
 //post
  click() {
         //what to send over to flask:
@@ -36,23 +38,54 @@ export default class App extends Component {
             //boolean
             showwhitespaces: is_checked_showwhitespaces,
             dummyvalues: is_checked_dummyvalues*/
+        var headers = {
+            'Content-Type': 'application/json',
+           
+        }
+
 
         const request_info = {
             template: this.state.value1,
             values: this.state.value2,
-            input_type: "test",
+            input_type: "json",
              showwhitespaces: 1,
             dummyvalues: 1,
         }
 
         this.setState({ isLoading: true });
 
-        axios.post("http://localhost:5000/convert", {request_info},console.log(request_info))
+
+
+/*
+
+
+ axios({  method: 'post',
+    url: "http://localhost:5000/convert",
+    data: request_info,
+    config: { headers: {'Content-Type': 'multipart/form-data' }}
+    })
+    .then(function (response) {
+        //handle success
+        console.log(response);
+        console.log("FORM:" + request_info);
+    })
+    .catch(function (response) {
+        //handle error
+        console.log(response);
+        console.log("FORM" + request_info);
+
+    })
+    }
+    });*/
+
+        axios.post("http://localhost:5000/convert", {request_info}, {headers: headers})
             .then((response) => {
                   this.setState({ data: response.data, isLoading: false });
+                   console.log(request_info)
              })
             .catch((err) => {
                   this.setState({ data: err, isLoading: false });
+                   console.log(request_info)
              });
     }
 
@@ -61,7 +94,7 @@ export default class App extends Component {
     this.setState({value: event.target.value1});
   }
 
-    handleValueChange(event) {
+  handleValueChange(event) {
     this.setState({value: event.target.value2});
   }
   handleSubmit(event) {
@@ -78,15 +111,14 @@ export default class App extends Component {
         loading: true,
         person: null,
     }
+
+    //This is for the render display
     async componentDidMount(){
 
-   /*     axios.post("http://localhost:5000/convert", this.state.value1).then(response => {
-          console.log(response);
-        }).catch(error => {
-          console.log("this is error", error);
-    });*/
+ 
 
         const url = "https://api.randomuser.me/";
+        //fetch data
         const response = await fetch(url);
         const data = await response.json();
         //change this so that if there is no response in render make it blank 

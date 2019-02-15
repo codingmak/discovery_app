@@ -37,51 +37,69 @@ def home():
 
 @app.route('/convert', methods=['GET', 'POST'])
 def convert():
+    
     jinja2_env = Environment()
 
-    # Load custom filters
-    custom_filters = get_custom_filters()
-    app.logger.debug('Add the following customer filters to Jinja environment: %s' % ', '.join(custom_filters.keys()))
-    jinja2_env.filters.update(custom_filters)
 
+    #Load custom filters
+    # custom_filters = get_custom_filters()
+    # app.logger.debug('Add the following customer filters to Jinja environment: %s' % ', '.join(custom_filters.keys()))
+    # jinja2_env.filters.update(custom_filters)
+
+
+
+    json_request = request.get_json(force=True)
+
+    print(json_request)
+
+    # print(request.form['template'])
+    if request.method == "POST":
     # Load the template
-    try:
-        jinja2_tpl = jinja2_env.from_string(request.form['template'])
-    except (exceptions.TemplateSyntaxError, exceptions.TemplateError) as e:
-        return "Syntax error in jinja2 template: {0}".format(e)
+    
+        try:
+          
+            jinja2_tpl = jinja2_env.from_string(json_request['request_info']['template'])
+            
+            return "Success"
+           
+        except (exceptions.TemplateSyntaxError, exceptions.TemplateError) as e:
+            return "Syntax error in jinja2 template: {0}".format(e)
 
 
-    dummy_values = [ 'Lorem', 'Ipsum', 'Amet', 'Elit', 'Expositum',
-        'Dissimile', 'Superiori', 'Laboro', 'Torquate', 'sunt',
-    ]
-    values = {}
-    if bool(int(request.form['dummyvalues'])):
-        # List template variables (introspection)
-        vars_to_fill = meta.find_undeclared_variables(jinja2_env.parse(request.form['template']))
+        dummy_values = [ 'Lorem', 'Ipsum', 'Amet', 'Elit', 'Expositum',
+            'Dissimile', 'Superiori', 'Laboro', 'Torquate', 'sunt',
+        ]
+        # values = {}
+        # if bool(int(json_request['request_info']['showwhitespaces'])):
+        #     # List template variables (introspection)
+        #     vars_to_fill = meta.find_undeclared_variables(jinja2_env.parse(json_request['request_info']['template']))
 
-        for v in vars_to_fill:
-            values[v] = choice(dummy_values)
-    else:
-        # Check JSON for errors
-        if request.form['input_type'] == "json":
-            try:
-                values = json.loads(request.form['values'])
-            except ValueError as e:
-                return "Value error in JSON: {0}".format(e)
-        # Check YAML for errors
-      
+        #     for v in vars_to_fill:
+        #         values[v] = choice(dummy_values)
+        # else:
+        #     # Check JSON for errors
+        #     if json_request['request_info']['input_type'] == "json":
+        #         try:
+        #             values = json_request['request_info']['values'])
+        #         except ValueError as e:
+        #             return "Value error in JSON: {0}".format(e)
+  
 
-    # If ve have empty var array or other errors we need to catch it and show
-    try:
-        rendered_jinja2_tpl = jinja2_tpl.render(values)
-    except (exceptions.TemplateRuntimeError, ValueError, TypeError) as e:
-        return "Error in your values input filed: {0}".format(e)
+        # If ve have empty var array or other errors we need to catch it and show
+        try:
+            rendered_jinja2_tpl = jinja2_tpl.render(dummy_values[0])
+            return rendered_jinja2_tpl
+        except (exceptions.TemplateRuntimeError, ValueError, TypeError) as e:
+            return "Error in your values input filed: {0}".format(e)
 
-    if bool(int(request.form['showwhitespaces'])):
-        # Replace whitespaces with a visible character (will be grayed with javascript)
-        rendered_jinja2_tpl = rendered_jinja2_tpl.replace(' ', u'•')
+        if bool(int(json_request['request_info']['showwhitespaces'])):
+            # Replace whitespaces with a visible character (will be grayed with javascript)
+            rendered_jinja2_tpl = rendered_jinja2_tpl.replace(' ', u'•')
+        
+        print("This is it: " + str(escape(rendered_jinja2_tpl).replace('\n', '<br />')))
 
-    return escape(rendered_jinja2_tpl).replace('\n', '<br />')
+        # return escape(rendered_jinja2_tpl).replace('\n', '<br />')
+        return "Test"
 
 
 if __name__ == "__main__":

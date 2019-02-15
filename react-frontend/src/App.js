@@ -32,14 +32,17 @@ export default class App extends Component {
             console.log($('#template').val())
             values: $('#values').val(),
             input_type: input_type,
-            
+
             //boolean
             showwhitespaces: is_checked_showwhitespaces,
             dummyvalues: is_checked_dummyvalues*/
 
         const request_info = {
             template: this.state.value1,
-            values: this.state.value2
+            values: this.state.value2,
+            input_type: "test",
+             showwhitespaces: 1,
+            dummyvalues: 1,
         }
 
         this.setState({ isLoading: true });

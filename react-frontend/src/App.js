@@ -132,8 +132,31 @@ export default class App extends Component {
         
     }
     
+/*
+ state = {
+        loading_screen: true,
+        template_rendered: null,
+    }
+
+    //This is for the render display
+    async componentDidMount(){
+
+ 
+
+        const url = "http://localhost:5000/convert";
+        //fetch data
+        const response = await fetch(url);
+        const data = await response.json();
+        //change this so that if there is no response in render make it blank 
+        this.setState({template_rendered: data,loading_screen:false})
+        console.log("response: "+ response.status)
+        console.log(data)
 
 
+            ////POST////////////////
+
+        
+    }*/
   
   render() {
 
@@ -172,10 +195,19 @@ export default class App extends Component {
                 <div id="render"></div>
       
             </div>
-            <div class="col-md-2">
+            
+        </div>
+
+         <div class="row">
+            <div class="col-md-5">
+                <h1>Values</h1>
+                <textarea id="values" value={this.state.value2} onChange={this.handleValueChange}></textarea>
+            </div>
+          
+        <div class="col-md-5">
                 <h1>Settings</h1>
                 <div id="settings">
-                    <label><input type="checkbox" name="showwhitespaces" checked="checked" /> Show whitespaces</label><br/>
+                    <label><input type="checkbox" name="showwhitespaces"  /> Show whitespaces</label><br/>
                      <label><input type="checkbox" name="dummyvalues" /> Use dummy values</label>
                     <h1> JSON</h1>
                   
@@ -184,18 +216,9 @@ export default class App extends Component {
                     <input type="button" class="btn btn-danger" id="clear" value="Clear" />
                 </div>
             </div>
+  
         </div>
-         <div class="row">
-            <div class="col-md-5">
-                <h1>Values</h1>
-                <textarea id="values" value={this.state.value2} onChange={this.handleValueChange}></textarea>
-            </div>
-            <div class="col-md-7">
-                <h1>Custom Filters</h1>
-            
-            </div>
-        </div>
-       
+    
     </form>
 
       </div>

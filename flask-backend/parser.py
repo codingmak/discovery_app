@@ -59,12 +59,12 @@ def convert():
           
             jinja2_tpl = jinja2_env.from_string(json_request['request_info']['template'])
            
-            #return rendered_jinja2_tpl
+
 
            
            
         except (exceptions.TemplateSyntaxError, exceptions.TemplateError) as e:
-            print("asdf")
+        
             return "Syntax error in jinja2 template: {0}".format(e)
 
 
@@ -98,14 +98,14 @@ def convert():
             return "Error in your values input filed: {0}".format(e)
 
 
-        print(json_request['request_info']['showwhitespaces'])
-        if bool(int(json_request['request_info']['showwhitespaces'])):
-            # Replace whitespaces with a visible character (will be grayed with javascript)
-            rendered_jinja2_tpl = rendered_jinja2_tpl.replace(' ', u'•')
-        
-    
 
-        return escape(rendered_jinja2_tpl).replace('\n', '<br />')
+        # if bool(int(json_request['request_info']['showwhitespaces'])):
+        #     # Replace whitespaces with a visible character (will be grayed with javascript)
+        #     rendered_jinja2_tpl = rendered_jinja2_tpl.replace(' ', u'•')
+        
+            
+
+        return rendered_jinja2_tpl
         
        
 

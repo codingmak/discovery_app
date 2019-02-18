@@ -14,7 +14,7 @@ export default class App extends Component {
         isLoading: false,
         //Hello {{name}}! {% if test -%} How are you?{%- endif %}
         value: ' ', 
-        value2: '{ "name": "A", "test":false } ',
+        value2: ' ',
         dummy_values: 1,
         };
         
@@ -99,12 +99,15 @@ export default class App extends Component {
   }
 
 
-  handleSubmit(event) {
-    event.preventDefault();
+  handleChange2(event) {
+     this.setState({value2: event.target.value});
   }
 
    
 
+  handleSubmit(event) {
+    event.preventDefault();
+}
     
 
 
@@ -161,13 +164,13 @@ export default class App extends Component {
         <div class="row">
             <div class="col-md-5">
                 <h1>Template</h1>
-              {/*  onChange={this.handleChange.bind(this)} or value = this.state.value*/} 
-               <textarea id="template"  onChange={this.handleChange.bind(this)}/>
+              
+               <textarea id="template" placeholder="Hello {{name}}! {% if test -%} How are you?{%- endif %}" onChange={this.handleChange.bind(this)}/>
             </div>
             <div class="col-md-5">
                 <h1>Render</h1>
                 {/*.replace(/•/g, " ")*/}
-                <div id="render"> {this.state.loading || !this.state.data? <div id="render">Waiting for input...</div> : <div><div>{this.state.data.replace(/•/g, " ")}</div></div>}</div>
+                <div id="render"> {this.state.loading || !this.state.data? <div id="render">Waiting for input...</div> : <div><div>{this.state.data.toString().replace(/•/g, " ")}</div></div>}</div>
       
             </div>
             
@@ -176,7 +179,7 @@ export default class App extends Component {
          <div class="row">
             <div class="col-md-5">
                 <h1>Values</h1>
-                <textarea id="values" value={this.state.value2} onChange={this.handleValueChange}></textarea>
+                <textarea id="values" value={this.state.value2} onChange={this.handleChange2.bind(this)}></textarea>
             </div>
           
         <div class="col-md-5">

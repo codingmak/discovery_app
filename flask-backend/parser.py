@@ -73,7 +73,7 @@ def convert():
         ]
        
         values = {}
-        if bool(int(json_request['request_info']['showwhitespaces'])):
+        if bool(int(json_request['request_info']['dummy_values'])):
             # List template variables (introspection)
             vars_to_fill = meta.find_undeclared_variables(jinja2_env.parse(json_request['request_info']['template']))
 
@@ -82,6 +82,8 @@ def convert():
         else:
             # Check JSON for errors
             if json_request['request_info']['input_type'] == "json":
+                values = json_request['request_info']['values']
+                print(values)
                 try:
                     values = json_request['request_info']['values']
                 except ValueError as e:

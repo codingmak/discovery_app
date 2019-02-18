@@ -12,13 +12,15 @@ export default class App extends Component {
         this.state = { 
         data: '',
         isLoading: false,
-        value1: 'Hello {{name}}! {% if test -%} How are you?{%- endif %}', 
-        value2: '{"name": "A"}' };
-
+        //Hello {{name}}! {% if test -%} How are you?{%- endif %}
+        value: ' ', 
+        value2: '{ "name": "A", "test":false } ',
+        dummy_values: 1,
+        };
         
 
 
-        this.handleChange = this.handleChange.bind(this);
+        
         this.handleSubmit = this.handleSubmit.bind(this);
         this.click = this.click.bind(this);
 
@@ -45,11 +47,11 @@ export default class App extends Component {
 
 
         const request_info = {
-            template: this.state.value1,
+            template: this.state.value,
             values: this.state.value2,
             input_type: "json",
-             showwhitespaces: 1,
-            dummyvalues: 1,
+            showwhitespaces: 1,
+            dummy_values: this.state.dummy_values,
         }
 
         this.setState({ isLoading: true });
@@ -81,24 +83,23 @@ export default class App extends Component {
         axios.post("http://localhost:5000/convert", {request_info}, {headers: headers})
             .then((response) => {
                   this.setState({ data: response.data, isLoading: false });
+                     
                    console.log(request_info)
              })
             .catch((err) => {
                   this.setState({ data: err, isLoading: false });
+                  
                    console.log(request_info)
              });
     }
 
 
   handleChange(event) {
-    this.setState({value: event.target.value1});
+    this.setState({value: event.target.value});
   }
 
-  handleValueChange(event) {
-    this.setState({value: event.target.value2});
-  }
+
   handleSubmit(event) {
-    alert('An essay was submitted: ' + this.state.value1);
     event.preventDefault();
   }
 
@@ -106,31 +107,7 @@ export default class App extends Component {
 
     
 
-//////////////GET/////////////////
-    state = {
-        loading: true,
-        person: null,
-    }
 
-    //This is for the render display
-    async componentDidMount(){
-
- 
-
-        const url = "https://api.randomuser.me/";
-        //fetch data
-        const response = await fetch(url);
-        const data = await response.json();
-        //change this so that if there is no response in render make it blank 
-        this.setState({person: data.results[0],loading:false})
-        console.log("response: "+ response.status)
-        console.log(data)
-
-
-            ////POST////////////////
-
-        
-    }
     
 /*
  state = {
@@ -168,10 +145,6 @@ export default class App extends Component {
           {window.token}
 
 
-          <div>
-          {this.state.loading || !this.state.person ? <div id="render">loading...</div> : <div><div>{this.state.person.name.first}</div><div>{this.state.person.name.last}</div></div>}
-          </div>
-
 
           </p>
 
@@ -188,11 +161,13 @@ export default class App extends Component {
         <div class="row">
             <div class="col-md-5">
                 <h1>Template</h1>
-               <textarea id="template" value={this.state.value1} onChange={this.handleChange}/>
+              {/*  onChange={this.handleChange.bind(this)} or value = this.state.value*/} 
+               <textarea id="template"  onChange={this.handleChange.bind(this)}/>
             </div>
             <div class="col-md-5">
                 <h1>Render</h1>
-                <div id="render"></div>
+                {/*.replace(/•/g, " ")*/}
+                <div id="render"> {this.state.loading || !this.state.data? <div id="render">Waiting for input...</div> : <div><div>{this.state.data.replace(/•/g, " ")}</div></div>}</div>
       
             </div>
             
@@ -205,14 +180,14 @@ export default class App extends Component {
             </div>
           
         <div class="col-md-5">
-                <h1>Settings</h1>
+     
                 <div id="settings">
-                    <label><input type="checkbox" name="showwhitespaces"  /> Show whitespaces</label><br/>
-                     <label><input type="checkbox" name="dummyvalues" /> Use dummy values</label>
+               
+                 
                     <h1> JSON</h1>
                   
                     <input type="button" class="btn btn-success" id="convert" value="Convert" onClick={this.click} disabled={this.state.isLoading}/>
-                    {console.log(this.state.data)}
+                    {console.log("It's here: " + this.state.data)}
                     <input type="button" class="btn btn-danger" id="clear" value="Clear" />
                 </div>
             </div>

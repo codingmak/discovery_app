@@ -62,18 +62,18 @@ def convert():
 
 
            
-            # print("hit")
+           
         except (exceptions.TemplateSyntaxError, exceptions.TemplateError) as e:
         
             return "Syntax error in jinja2 template: {0}".format(e)
 
-        # print("hit")    
+      
         dummy_values = [ 'Lorem', 'Ipsum', 'Amet', 'Elit', 'Expositum',
             'Dissimile', 'Superiori', 'Laboro', 'Torquate', 'sunt',
         ]
        
         values = {}
-        # print("hit")
+        
         if bool(int(json_request['request_info']['dummy_values'])):
             # List template variables (introspection)
             vars_to_fill = meta.find_undeclared_variables(jinja2_env.parse(json_request['request_info']['template']))
@@ -83,15 +83,12 @@ def convert():
                 #print("hit")
         else:
             # Check JSON for errors
-            #hits the if statement not here
-            #print("hit")
+         
             if json_request['request_info']['input_type'] == "json":
-                values = json_request['request_info']['values']
-                values = json.loads(values)
-                print(type(values))
+                        
                 try:
                     values = json_request['request_info']['values']
-            
+                    values = json.loads(values)
                     print(values)
                 
                 except ValueError as e:
@@ -100,9 +97,9 @@ def convert():
 
         # If ve have empty var array or other errors we need to catch it and show
         try:
-            #cannot for loop range here
+           
             rendered_jinja2_tpl = jinja2_tpl.render(values)
-            print("hjit")
+       
        
         except (exceptions.TemplateRuntimeError, ValueError, TypeError) as e:
             return "Error in your values input field: {0}".format(e)

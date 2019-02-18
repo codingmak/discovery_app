@@ -54,7 +54,7 @@ def convert():
     # print(request.form['template'])
     if request.method == "POST":
     # Load the template
-    
+        # print(json_request['request_info']['template'])
         try:
           
             jinja2_tpl = jinja2_env.from_string(json_request['request_info']['template'])
@@ -62,47 +62,53 @@ def convert():
 
 
            
-           
+            # print("hit")
         except (exceptions.TemplateSyntaxError, exceptions.TemplateError) as e:
         
             return "Syntax error in jinja2 template: {0}".format(e)
 
-
+        # print("hit")    
         dummy_values = [ 'Lorem', 'Ipsum', 'Amet', 'Elit', 'Expositum',
             'Dissimile', 'Superiori', 'Laboro', 'Torquate', 'sunt',
         ]
        
         values = {}
+        # print("hit")
         if bool(int(json_request['request_info']['dummy_values'])):
             # List template variables (introspection)
             vars_to_fill = meta.find_undeclared_variables(jinja2_env.parse(json_request['request_info']['template']))
-
+            #print("hit")
             for v in vars_to_fill:
                 values[v] = choice(dummy_values)
+                #print("hit")
         else:
             # Check JSON for errors
+            #hits the if statement not here
+            #print("hit")
             if json_request['request_info']['input_type'] == "json":
                 values = json_request['request_info']['values']
-                print(values)
+                values = json.loads(values)
+                print(type(values))
                 try:
                     values = json_request['request_info']['values']
+            
+                    print(values)
+                
                 except ValueError as e:
                     return "Value error in JSON: {0}".format(e)
   
 
         # If ve have empty var array or other errors we need to catch it and show
         try:
+            #cannot for loop range here
             rendered_jinja2_tpl = jinja2_tpl.render(values)
-            print(rendered_jinja2_tpl)
+            print("hjit")
+       
         except (exceptions.TemplateRuntimeError, ValueError, TypeError) as e:
-            return "Error in your values input filed: {0}".format(e)
+            return "Error in your values input field: {0}".format(e)
 
 
 
-        # if bool(int(json_request['request_info']['showwhitespaces'])):
-        #     # Replace whitespaces with a visible character (will be grayed with javascript)
-        #     rendered_jinja2_tpl = rendered_jinja2_tpl.replace(' ', u'•')
-        
             
 
         return rendered_jinja2_tpl
